@@ -27,11 +27,16 @@ const createSportCategory = async (req, res) => {
 const getAllSportCategories = async (req, res) => {
     try {
         const sportCategories = await SportCategory.find().sort({ name: 1 });
-        return responseHandler(res, 200, 'Sport categories fetched successfully.', sportCategories);
+        const total = await SportCategory.countDocuments();
+
+        return responseHandler(res, 200, 'Sport categories fetched successfully.', {
+            total,
+            categories: sportCategories,
+        });
     } catch (error) {
         return errorHandler(res, 500, 'Internal Server Error.');
     }
-}
+};
 
 // ? Get sport category by ID
 const getSportCategoryById = async (req, res) => {

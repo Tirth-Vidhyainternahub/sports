@@ -7,9 +7,9 @@ const { createSportCategory, getAllSportCategories, getSportCategoryById, update
 // ? Create a new sport category
 router.post("/", validateToken, validateAdmin, createSportCategory);
 // ? Get all sport categories
-router.get("/", getAllSportCategories);
+router.get("/", validateToken,getAllSportCategories);
 // ? Get sport category by ID
-router.get("/:id", getSportCategoryById);
+router.get("/:id", validateToken,getSportCategoryById);
 // ? Update sport category by ID
 router.put("/:id", validateToken, validateAdmin, updateSportCategoryById);
 // ? Delete sport category by ID

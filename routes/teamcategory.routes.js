@@ -6,8 +6,8 @@ const { createTeamCategory, getAllTeamCategories, getTeamCategoryById, updateTea
 
 // ? Create a new team category
 router.post("/", validateToken, validateAdmin, createTeamCategory);
-router.get("/", getAllTeamCategories);
-router.get("/:id", getTeamCategoryById);
+router.get("/", validateToken,getAllTeamCategories);
+router.get("/:id", validateToken,getTeamCategoryById);
 router.put("/:id", validateToken, validateAdmin, updateTeamCategoryById);
 router.delete("/:id", validateToken, validateAdmin, deleteTeamCategoryById);
 

@@ -1,5 +1,4 @@
 const teamCategory = require('../models/teamcategory.model.js');
-
 const errorHandler = require('../utils/error.js');
 const responseHandler = require('../utils/response.js');
 
@@ -28,7 +27,12 @@ const createTeamCategory = async (req, res) => {
 const getAllTeamCategories = async (req, res) => {
     try {
         const teamCategories = await teamCategory.find();
-        return responseHandler(res, 200, 'Team categories fetched successfully.', teamCategories);
+        const total = teamCategories.length; // or use countDocuments if needed
+
+        return responseHandler(res, 200, 'Team categories fetched successfully.', {
+            total,
+            teamCategories
+        });
     } catch (error) {
         return errorHandler(res, 500, 'Internal Server Error.', error);
     }
