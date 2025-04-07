@@ -1,3 +1,4 @@
 node_modules
 .env
 myapp-db9bb-firebase-adminsdk-fbsvc-1ada6ebbb0.json
+.vs

@@ -218,7 +218,7 @@ const manualSignup = async (req, res) => {
       { expiresIn: "10m" }
     );
 
-    const verificationLink = `http://localhost:8080/api/v1/auth/verify-email/${verificationToken}`;
+    const verificationLink = `http://localhost:5000/api/v1/auth/verify-email/${verificationToken}`;
 
     // Send verification email
     await transporter.sendMail({

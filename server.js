@@ -11,6 +11,8 @@ const errorHandler = require("./utils/error");
 const authRoutes = require("./routes/auth.routes");
 const testRoutes = require("./routes/test.routes")
 const userRoutes = require("./routes/user.routes")
+const teamCategoryRoutes = require("./routes/teamcategory.routes")
+const sportCategoryRoutes = require("./routes/sportcategory.routes")
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -27,6 +29,8 @@ app.use(express.json());
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/test", testRoutes)
 app.use("/api/v1/user", userRoutes)
+app.use("/api/v1/teamcategory", teamCategoryRoutes);
+app.use("/api/v1/sportcategory", sportCategoryRoutes);
 
 // Health Check Route
 app.get("/api/v1/health", (req, res) => {
