@@ -7,7 +7,6 @@ const https = require("https");
 const nodemailer = require("nodemailer")
 const bcrypt = require("bcryptjs")
 
-
 const googleLogin = async (req, res) => {
   try {
     const { idToken } = req.body;
@@ -28,15 +27,20 @@ const googleLogin = async (req, res) => {
     let user = await User.findOne({ email });
 
     if (!user) {
-      // Create new user and save it to generate _id
+      // Get the latest deviceId from existing users
+      const lastUser = await User.findOne().sort({ deviceId: -1 }).select("deviceId");
+      const nextDeviceId = lastUser?.deviceId ? parseInt(lastUser.deviceId) + 1 : 1;
+
+      // Create new user and save it
       user = await new User({
         name: name || "Unnamed User",
         email,
         profilePic: picture || "",
         isVerified: true,
-        role: "user",
+        role: "user", // ✅ Default role for Google login
         accountMethod: "google",
         providerId: uid,
+        deviceId: nextDeviceId.toString(),
         lastLogin: new Date(),
       }).save();
     } else {
@@ -45,7 +49,7 @@ const googleLogin = async (req, res) => {
       await user.save();
     }
 
-    // Create a JWT token with all user data EXCEPT password
+    // Create token payload
     const tokenPayload = {
       _id: user._id.toString(),
       name: user.name,
@@ -55,6 +59,9 @@ const googleLogin = async (req, res) => {
       role: user.role,
       accountMethod: user.accountMethod,
       providerId: user.providerId,
+      deviceId: user.deviceId,
+      age: user.age,
+      mobileNumber: user.mobileNumber,
       lastLogin: user.lastLogin,
       createdAt: user.createdAt,
       updatedAt: user.updatedAt,
@@ -75,7 +82,7 @@ const facebookLogin = async (req, res) => {
       return errorHandler(res, 400, "Access Token is required.");
     }
 
-    const facebookGraphUrl = `https://graph.facebook.com/me?fields=id,name,email,picture&access_token=${accessToken}`;
+    const facebookGraphUrl = `https://graph.facebook.com/me?fields=id,name,email,picture.type(large)&access_token=${accessToken}`;
 
     https.get(facebookGraphUrl, (fbRes) => {
       let data = "";
@@ -85,28 +92,64 @@ const facebookLogin = async (req, res) => {
       });
 
       fbRes.on("end", async () => {
-        const fbUser = JSON.parse(data);
-        if (!fbUser || fbUser.error) {
-          return errorHandler(res, 400, "Invalid Facebook Token");
+        try {
+          const fbUser = JSON.parse(data);
+
+          if (!fbUser || fbUser.error || !fbUser.email) {
+            return errorHandler(res, 400, "Invalid Facebook Token or missing email.");
+          }
+
+          let user = await User.findOne({ email: fbUser.email });
+
+          if (!user) {
+            // Get next deviceId
+            const lastUser = await User.findOne().sort({ deviceId: -1 }).select("deviceId");
+            const nextDeviceId = lastUser?.deviceId ? parseInt(lastUser.deviceId) + 1 : 1;
+
+            // Create new user
+            user = new User({
+              name: fbUser.name || "Unnamed User",
+              email: fbUser.email,
+              profilePic: fbUser.picture?.data?.url || "",
+              isVerified: true,
+              role: "user", // ✅ Default role for Facebook login
+              accountMethod: "facebook",
+              providerId: fbUser.id,
+              deviceId: nextDeviceId.toString(),
+              lastLogin: new Date(),
+            });
+
+            await user.save();
+          } else {
+            // Update last login
+            user.lastLogin = new Date();
+            await user.save();
+          }
+
+          // Create token payload
+          const tokenPayload = {
+            _id: user._id.toString(),
+            name: user.name,
+            email: user.email,
+            profilePic: user.profilePic,
+            isVerified: user.isVerified,
+            role: user.role,
+            accountMethod: user.accountMethod,
+            providerId: user.providerId,
+            deviceId: user.deviceId,
+            age: user.age,
+            mobileNumber: user.mobileNumber,
+            lastLogin: user.lastLogin,
+            createdAt: user.createdAt,
+            updatedAt: user.updatedAt,
+          };
+
+          const token = jwt.sign(tokenPayload, process.env.JWT_SECRET, { expiresIn: "7d" });
+
+          responseHandler(res, 200, "Facebook login successful", { user, token });
+        } catch (err) {
+          errorHandler(res, 500, "Facebook Login Failed", err.message);
         }
-
-        let user = await User.findOne({ email: fbUser.email });
-        if (!user) {
-          user = new User({
-            name: fbUser.name,
-            email: fbUser.email,
-            profilePic: fbUser.picture.data.url,
-            isVerified: true,
-            role: "user",
-            accountMethod: "facebook", // ✅ Ensure accountMethod is always provided
-            providerId: fbUser.id,
-            lastLogin: new Date(),
-          });
-
-          await user.save();
-        }
-
-        responseHandler(res, 200, "Facebook login successful", { user });
       });
     }).on("error", (err) => {
       errorHandler(res, 500, "Facebook Login Failed", err.message);
@@ -126,9 +169,10 @@ const transporter = nodemailer.createTransport({
 
 const manualSignup = async (req, res) => {
   try {
-    const { name, email, password, role } = req.body; // Extract role from req.body
+    const { name, email, password, age, mobileNumber, role } = req.body;
 
-    if (!name || !email || !password) {
+    // Validation
+    if (!name || !email || !password || !age || !mobileNumber) {
       return errorHandler(res, 400, "All fields are required.");
     }
 
@@ -143,19 +187,31 @@ const manualSignup = async (req, res) => {
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
+    // Generate deviceId (auto-increment)
+    const lastUser = await User.findOne().sort({ deviceId: -1 }).select("deviceId");
+    const nextDeviceId = lastUser?.deviceId ? parseInt(lastUser.deviceId) + 1 : 1;
+
+    // Assign role - only allow "admin" if explicitly passed, otherwise default to "user"
+    const assignedRole = role === "admin" ? "admin" : "user";
+
     const newUser = new User({
       name,
       email,
       password: hashedPassword,
       profilePic: req.file.path, // Cloudinary image URL
+      age,
+      mobileNumber,
+      deviceId: nextDeviceId.toString(),
       isVerified: false,
-      role: role || "user", // Use provided role, otherwise default to "user"
+      role: assignedRole,
       accountMethod: "manual",
+      providerId: null,
+      lastLogin: new Date(),
     });
 
     await newUser.save();
 
-    // Generate a verification token (valid for 10 minutes)
+    // Generate email verification token
     const verificationToken = jwt.sign(
       { userId: newUser._id },
       process.env.JWT_SECRET,
@@ -164,6 +220,7 @@ const manualSignup = async (req, res) => {
 
     const verificationLink = `http://localhost:8080/api/v1/auth/verify-email/${verificationToken}`;
 
+    // Send verification email
     await transporter.sendMail({
       from: process.env.EMAIL_USER,
       to: newUser.email,
@@ -227,6 +284,10 @@ const manualLogin = async (req, res) => {
       return errorHandler(res, 400, "Invalid email or password.");
     }
 
+    // Update last login timestamp
+    user.lastLogin = new Date();
+    await user.save();
+
     const tokenPayload = {
       _id: user._id.toString(),
       name: user.name,
@@ -235,6 +296,11 @@ const manualLogin = async (req, res) => {
       isVerified: user.isVerified,
       role: user.role,
       accountMethod: user.accountMethod,
+      providerId: user.providerId,
+      deviceId: user.deviceId,
+      mobileNumber: user.mobileNumber,
+      age: user.age,
+      lastLogin: user.lastLogin,
       createdAt: user.createdAt,
       updatedAt: user.updatedAt,
     };

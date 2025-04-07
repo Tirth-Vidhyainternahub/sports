@@ -5,40 +5,51 @@ const UserSchema = new mongoose.Schema(
     name: {
       type: String,
       required: true,
+      trim: true,
+    },
+    age: {
+      type: Number,
+      default: null,
+    },
+    mobileNumber: {
+      type: String,
+      default: null,
+      trim: true,
     },
     email: {
       type: String,
       required: true,
       unique: true,
       lowercase: true,
+      trim: true,
     },
     password: {
-      type: String, // Required for manual sign-up (hashed password)
+      type: String, // Only for manual signup (hashed)
     },
-    profilePic: {
-      type: String, // URL of the profile picture
-      default: "",
+    deviceId: {
+      type: String,
+      default: null,
     },
     isVerified: {
       type: Boolean,
-      default: true, // Google Sign-In users are verified
+      default: true, // For social logins
+    },
+    accountMethod: {
+      type: String,
+      enum: ["google", "manual", "facebook"],
+      required: true,
+    },
+    providerId: {
+      type: String,
+      default: null, // UID for Google/Facebook
     },
     role: {
       type: String,
       enum: ["admin", "user"],
       default: "user",
     },
-    accountMethod: {
-      type: String,
-      enum: ["google", "manual", "facebook"],
-      required: true, // Track signup method
-    },
-    providerId: {
-      type: String, // Stores Google UID for Google sign-in users
-      default: null,
-    },
     lastLogin: {
-      type: Date, // Stores last login timestamp
+      type: Date,
       default: Date.now,
     },
   },
