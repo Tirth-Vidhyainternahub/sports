@@ -13,6 +13,8 @@ const testRoutes = require("./routes/test.routes")
 const userRoutes = require("./routes/user.routes")
 const teamCategoryRoutes = require("./routes/teamcategory.routes")
 const sportCategoryRoutes = require("./routes/sportcategory.routes")
+const cityRoutes = require("./routes/city.routes")
+const venueRoutes = require("./routes/venue.routes")
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -31,6 +33,8 @@ app.use("/api/v1/test", testRoutes)
 app.use("/api/v1/user", userRoutes)
 app.use("/api/v1/teamcategory", teamCategoryRoutes);
 app.use("/api/v1/sportcategory", sportCategoryRoutes);
+app.use("/api/v1/city", cityRoutes);
+app.use("/api/v1/venue", venueRoutes);
 
 // Health Check Route
 app.get("/api/v1/health", (req, res) => {
