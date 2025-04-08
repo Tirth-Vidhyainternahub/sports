@@ -7,8 +7,9 @@ const {
     getVanueById,
     updateVanueById,
     deleteVanueById,
-    getVanueByCity,
-    getVanueByCountry,
+    getVanuesByCity,
+    getVanuesByCountry,
+
 } = require("../controllers/venue.controller.js");
 
 // ? Create a new vanue
@@ -22,9 +23,9 @@ router.put("/:id", validateToken, validateAdmin, updateVanueById);
 // ? Delete vanue by ID
 router.delete("/:id", validateToken, validateAdmin, deleteVanueById);
 // ? Get vanue by city
-router.get("/city/:cityId", getVanueByCity);
+router.get("/city/:cityId", getVanuesByCity);
 // ? Get vanue by country
-router.get("/country/:countryId", getVanueByCountry);
+router.get("/country/:countryId", getVanuesByCountry);
 
 module.exports = router;
 
