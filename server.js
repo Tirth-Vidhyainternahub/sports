@@ -17,6 +17,7 @@ const cityRoutes = require("./routes/city.routes")
 const venueRoutes = require("./routes/venue.routes")
 const countryRoutes = require("./routes/country.routes")
 const ottRoutes = require("./routes/ott.routes")
+const telecastRoutes = require("./routes/telecast.routes")
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -39,6 +40,7 @@ app.use("/api/v1/city", cityRoutes);
 app.use("/api/v1/venue", venueRoutes);
 app.use("/api/v1/country", countryRoutes);
 app.use("/api/v1/ott",ottRoutes);
+app.use("/api/v1/telecast",telecastRoutes)
 
 // Health Check Route
 app.get("/api/v1/health", (req, res) => {
