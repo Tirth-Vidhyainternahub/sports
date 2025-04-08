@@ -18,6 +18,8 @@ const venueRoutes = require("./routes/venue.routes")
 const countryRoutes = require("./routes/country.routes")
 const ottRoutes = require("./routes/ott.routes")
 const telecastRoutes = require("./routes/telecast.routes")
+const sportRoutes = require("./routes/sport.routes")
+const playerRoutes = require("./routes/player.routes")
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -26,9 +28,9 @@ const PORT = process.env.PORT || 5000;
 connectDB();
 
 // Middleware
-app.use(cors()); 
+app.use(cors());
 app.use(morgan("dev"));
-app.use(express.json()); 
+app.use(express.json());
 
 // Routes
 app.use("/api/v1/auth", authRoutes);
@@ -39,8 +41,10 @@ app.use("/api/v1/sportcategory", sportCategoryRoutes);
 app.use("/api/v1/city", cityRoutes);
 app.use("/api/v1/venue", venueRoutes);
 app.use("/api/v1/country", countryRoutes);
-app.use("/api/v1/ott",ottRoutes);
-app.use("/api/v1/telecast",telecastRoutes)
+app.use("/api/v1/ott", ottRoutes);
+app.use("/api/v1/telecast", telecastRoutes);
+app.use("/api/v1/sport", sportRoutes);
+app.use("/api/v1/player", playerRoutes);
 
 // Health Check Route
 app.get("/api/v1/health", (req, res) => {
