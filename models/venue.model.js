@@ -7,27 +7,29 @@ const VenueSchema = new mongoose.Schema(
       required: true,
       unique: true,
     },
-    geolocation: {
-      type: String,//Url of Venue location,
+    location: {
+      geolocation: {
+        type: String, // URL of Venue location
+        required: true,
+      },
+      lat: {
+        type: Number,
+        required: true,
+      },
+      long: {
+        type: Number,
+        required: true,
+      },
+    },
+    city: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "City",
       required: true,
-        },
-    lat: {
-            type: Number,
-            required: true,
     },
-    long: {
-            type: Number,
-            required: true,
-        },
-    city:{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "City",
-        required: true,
-    },
-    country:{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Country",
-        required: true,
+    country: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Country",
+      required: true,
     },
   },
   { timestamps: true }

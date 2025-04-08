@@ -1,134 +1,220 @@
-const Vanue = require('../models/venue.model.js');
+const mongoose = require("mongoose");
+const Venue = require('../models/venue.model.js');
 const errorHandler = require('../utils/error.js');
 const responseHandler = require('../utils/response.js');
+const City = require("../models/city.model.js");
+const Country = require("../models/country.model.js");
 
-const createVanue = async (req, res) => {
+// ✅ Create a new venue
+const createVenue = async (req, res) => {
     try {
-        const { name, city, geolocation, lat, long, country } = req.body;
+        const { name, city, country, geolocation, lat, long } = req.body;
 
-        if (!name || !city || !geolocation || !country||!lat || !long) {
-            return errorHandler(res, 400, 'Name, city, geolocation and country are required.');
+        if (!name || !city || !country || !geolocation || !lat || !long) {
+            return errorHandler(res, 400, "All fields are required.");
         }
 
-        // Check if vanue already exists
-        const existingVanue = await Vanue.findOne({ name });
-        if (existingVanue) {
-            return errorHandler(res, 400, 'Vanue already exists.');
+        if (!mongoose.Types.ObjectId.isValid(city)) {
+            return errorHandler(res, 400, "Invalid city ID.");
         }
 
-        // Create new vanue with Cloudinary geolocation URL
-        const vanue = new Vanue({
+        if (!mongoose.Types.ObjectId.isValid(country)) {
+            return errorHandler(res, 400, "Invalid country ID.");
+        }
+
+        const cityExists = await City.findById(city);
+        if (!cityExists) {
+            return errorHandler(res, 404, "City not found.");
+        }
+
+        const countryExists = await Country.findById(country);
+        if (!countryExists) {
+            return errorHandler(res, 404, "Country not found.");
+        }
+
+        const existingVenue = await Venue.findOne({ name });
+        if (existingVenue) {
+            return errorHandler(res, 400, "Venue already exists.");
+        }
+
+        const venue = new Venue({
             name,
             city,
             country,
-            geolocation,
-            lat,
-            long,
+            location: {
+                geolocation,
+                lat,
+                long,
+            },
         });
 
-        await vanue.save();
-        return responseHandler(res, 201, 'Vanue created successfully.', vanue);
-    } catch (error) {
-        return errorHandler(res, 500, 'Internal Server Error.', error);
-    }
-}
+        await venue.save();
 
-// ? Get all vanues
-const getAllVanues = async (req, res) => {
+        const populatedVenue = await Venue.findById(venue._id)
+            .populate("city")
+            .populate("country");
+
+        return responseHandler(res, 201, "Venue created successfully.", populatedVenue);
+    } catch (error) {
+        return errorHandler(res, 500, "Internal Server Error.", error);
+    }
+};
+
+// ✅ Get all venues
+const getAllVenues = async (req, res) => {
     try {
-        const vanues = await Vanue.find().populate('city').sort({ name: 1 });
-        return responseHandler(res, 200, 'Vanues fetched successfully.', vanues);
+        const venues = await Venue.find()
+            .populate('city')
+            .populate('country')
+            .sort({ name: 1 });
+
+        const total = await Venue.countDocuments();
+
+        return responseHandler(res, 200, 'Venues fetched successfully.', {
+            total,
+            venues,
+        });
     } catch (error) {
         return errorHandler(res, 500, 'Internal Server Error.');
     }
-}
+};
 
-// ? Get vanue by ID
-const getVanueById = async (req, res) => {
-    try {
-        const { id } = req.params;
-        const vanue = await Vanue.findById(id).populate('city');
-        if (!vanue) {
-            return errorHandler(res, 404, 'Vanue not found.');
-        }
-        return responseHandler(res, 200, 'Vanue fetched successfully.', vanue);
-    } catch (error) {
-        return errorHandler(res, 500, 'Internal Server Error.');
-    }
-}
-
-// ? Update vanue by ID
-
-const updateVanueById = async (req, res) => {
-    try {
-        const { id } = req.params;
-        const { name, city, geolocation, lat, long, country } = req.body;
-        const vanue = await Vanue.findById(id);
-        if (!vanue) {
-            return errorHandler(res, 404, 'Vanue not found.');
-        }
-        if (name) vanue.name = name;
-        if (city) vanue.city = city;
-        if (geolocation) vanue.geolocation = geolocation;
-        if (lat) vanue.lat = lat;
-        if (long) vanue.long = long;
-        if (country) vanue.country = country;
-        await vanue.save();
-        return responseHandler(res, 200, 'Vanue updated successfully.', vanue);
-    } catch (error) {
-        return errorHandler(res, 500, 'Internal Server Error.');
-    }
-}
-
-// ? Delete vanue by ID
-const deleteVanueById = async (req, res) => {
+// ✅ Get venue by ID
+const getVenueById = async (req, res) => {
     try {
         const { id } = req.params;
-        const vanue = await Vanue.findByIdAndDelete(id);
-        if (!vanue) {
-            return errorHandler(res, 404, 'Vanue not found.');
+        const venue = await Venue.findById(id)
+            .populate('city')
+            .populate('country');
+
+        if (!venue) {
+            return errorHandler(res, 404, 'Venue not found.');
         }
-        return responseHandler(res, 200, 'Vanue deleted successfully.', vanue);
+
+        return responseHandler(res, 200, 'Venue fetched successfully.', venue);
     } catch (error) {
         return errorHandler(res, 500, 'Internal Server Error.');
     }
-}
+};
 
-// ? Get all vanues by city
-const getVanuesByCity = async (req, res) => {
+// ✅ Update venue by ID
+const updateVenueById = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { name, city, country, geolocation, lat, long } = req.body;
+
+        const venue = await Venue.findById(id);
+        if (!venue) {
+            return errorHandler(res, 404, "Venue not found.");
+        }
+
+        if (name) venue.name = name;
+
+        if (city) {
+            if (!mongoose.Types.ObjectId.isValid(city)) {
+                return errorHandler(res, 400, "Invalid city ID.");
+            }
+            const cityExists = await City.findById(city);
+            if (!cityExists) {
+                return errorHandler(res, 404, "City not found.");
+            }
+            venue.city = city;
+        }
+
+        if (country) {
+            if (!mongoose.Types.ObjectId.isValid(country)) {
+                return errorHandler(res, 400, "Invalid country ID.");
+            }
+            const countryExists = await Country.findById(country);
+            if (!countryExists) {
+                return errorHandler(res, 404, "Country not found.");
+            }
+            venue.country = country;
+        }
+
+        if (geolocation || lat || long) {
+            venue.location.geolocation = geolocation || venue.location.geolocation;
+            venue.location.lat = lat || venue.location.lat;
+            venue.location.long = long || venue.location.long;
+        }
+
+        await venue.save();
+
+        const updatedVenue = await Venue.findById(id)
+            .populate("city")
+            .populate("country");
+
+        return responseHandler(res, 200, "Venue updated successfully.", updatedVenue);
+    } catch (error) {
+        return errorHandler(res, 500, "Internal Server Error.", error);
+    }
+};
+
+
+// ✅ Delete venue by ID
+const deleteVenueById = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const venue = await Venue.findByIdAndDelete(id);
+
+        if (!venue) {
+            return errorHandler(res, 404, 'Venue not found.');
+        }
+
+        return responseHandler(res, 200, 'Venue deleted successfully.', venue);
+    } catch (error) {
+        return errorHandler(res, 500, 'Internal Server Error.');
+    }
+};
+
+// ✅ Get venues by City ID
+const getVenuesByCity = async (req, res) => {
     try {
         const { cityId } = req.params;
-        const vanues = await Vanue.find({ city: cityId }).populate('city');
-        if (!vanues || vanues.length === 0) {
-            return errorHandler(res, 404, 'No vanues found for this city.');
+        const venues = await Venue.find({ city: cityId })
+            .populate('city')
+            .populate('country');
+
+        if (!venues || venues.length === 0) {
+            return errorHandler(res, 404, 'No venues found for this city.');
         }
-        return responseHandler(res, 200, 'Vanues fetched successfully.', vanues);
+
+        return responseHandler(res, 200, 'Venues fetched successfully.', {
+            total: venues.length,
+            venues,
+        });
     } catch (error) {
         return errorHandler(res, 500, 'Internal Server Error.');
     }
-}
+};
 
-// ? Get all vanues by country
-const getVanuesByCountry = async (req, res) => {
+// ✅ Get venues by Country ID
+const getVenuesByCountry = async (req, res) => {
     try {
         const { countryId } = req.params;
-        const vanues = await Vanue.find({ country: countryId }).populate('country');
-        if (!vanues || vanues.length === 0) {
-            return errorHandler(res, 404, 'No vanues found for this country.');
+        const venues = await Venue.find({ country: countryId })
+            .populate('city')
+            .populate('country');
+
+        if (!venues || venues.length === 0) {
+            return errorHandler(res, 404, 'No venues found for this country.');
         }
-        return responseHandler(res, 200, 'Vanues fetched successfully.', vanues);
+
+        return responseHandler(res, 200, 'Venues fetched successfully.', {
+            total: venues.length,
+            venues,
+        });
     } catch (error) {
         return errorHandler(res, 500, 'Internal Server Error.');
     }
-
-}
+};
 
 module.exports = {
-    createVanue,
-    getAllVanues,
-    getVanueById,
-    updateVanueById,
-    deleteVanueById,
-    getVanuesByCity,
-    getVanuesByCountry
+    createVenue,
+    getAllVenues,
+    getVenueById,
+    updateVenueById,
+    deleteVenueById,
+    getVenuesByCity,
+    getVenuesByCountry,
 };
