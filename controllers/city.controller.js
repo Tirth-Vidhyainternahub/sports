@@ -2,100 +2,101 @@ const City = require("../models/city.model");
 const errorHandler = require("../utils/error");
 const responseHandler = require("../utils/response");
 
-// ✅ Create a new city with geolocation image upload
+// ✅ Create a new city
 const createCity = async (req, res) => {
     try {
-        const { name, country} = req.body;
-    
-        if (!name || !country ) {
-        return errorHandler(res, 400, "Name, country, and geolocation are required.");
+        const { name, country } = req.body;
+
+        if (!name || !country) {
+            return errorHandler(res, 400, "Name and country are required.");
         }
-    
-        // Check if city already exists
+
         const existingCity = await City.findOne({ name });
         if (existingCity) {
-        return errorHandler(res, 400, "City already exists.");
+            return errorHandler(res, 400, "City already exists.");
         }
-    
-        // Create new city with Cloudinary geolocation URL
-        const city = new City({
-        name,
-        country,
-        });
-    
-        await city.save();
-        return responseHandler(res, 201, "City created successfully.", city);
+
+        const newCity = new City({ name, country });
+        await newCity.save();
+
+        // Populate the country before sending response
+        const populatedCity = await City.findById(newCity._id).populate("country");
+
+        return responseHandler(res, 201, "City created successfully.", populatedCity);
     } catch (error) {
         return errorHandler(res, 500, "Internal Server Error.", error);
     }
-    }
-
+};
 
 // ✅ Get all cities
 const getAllCities = async (req, res) => {
     try {
         const cities = await City.find().populate("country").sort({ name: 1 });
-        return responseHandler(res, 200, "Cities fetched successfully.", cities);
+
+        return responseHandler(res, 200, "Cities fetched successfully.", {
+            total: cities.length,
+            cities,
+        });
     } catch (error) {
         return errorHandler(res, 500, "Internal Server Error.");
     }
-}
+};
+
 // ✅ Get city by ID
 const getCityById = async (req, res) => {
     try {
         const { id } = req.params;
         const city = await City.findById(id).populate("country");
-    
+
         if (!city) {
-        return errorHandler(res, 404, "City not found.");
+            return errorHandler(res, 404, "City not found.");
         }
-    
+
         return responseHandler(res, 200, "City fetched successfully.", city);
     } catch (error) {
         return errorHandler(res, 500, "Internal Server Error.");
     }
-}
+};
 
-
-// ✅ Update city details
+// ✅ Update city
 const updateCity = async (req, res) => {
     try {
         const { id } = req.params;
         const { name, country } = req.body;
-    
-        // Check if city exists
-        const existingCity = await City.findById(id);
-        if (!existingCity) {
-        return errorHandler(res, 404, "City not found.");
+
+        const city = await City.findById(id);
+        if (!city) {
+            return errorHandler(res, 404, "City not found.");
         }
-    
-        // Update city details
-        existingCity.name = name || existingCity.name;
-        existingCity.country = country || existingCity.country;
-    
-        await existingCity.save();
-        return responseHandler(res, 200, "City updated successfully.", existingCity);
+
+        city.name = name || city.name;
+        city.country = country || city.country;
+
+        await city.save();
+
+        const populatedCity = await City.findById(city._id).populate("country");
+        return responseHandler(res, 200, "City updated successfully.", populatedCity);
     } catch (error) {
         return errorHandler(res, 500, "Internal Server Error.");
     }
-}
-
+};
 
 // ✅ Delete city
 const deleteCity = async (req, res) => {
     try {
         const { id } = req.params;
-        const city = await City.findByIdAndDelete(id);
-    
+
+        const city = await City.findById(id).populate("country");
         if (!city) {
-        return errorHandler(res, 404, "City not found.");
+            return errorHandler(res, 404, "City not found.");
         }
-    
+
+        await City.findByIdAndDelete(id);
         return responseHandler(res, 200, "City deleted successfully.", city);
     } catch (error) {
         return errorHandler(res, 500, "Internal Server Error.");
     }
-}
+};
 
 module.exports = {
     createCity,
@@ -103,4 +104,4 @@ module.exports = {
     getCityById,
     updateCity,
     deleteCity
-}
+};
