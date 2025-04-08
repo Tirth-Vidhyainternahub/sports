@@ -9,7 +9,6 @@ const errorHandler = require("./utils/error");
 
 // Import Routes
 const authRoutes = require("./routes/auth.routes");
-const testRoutes = require("./routes/test.routes")
 const userRoutes = require("./routes/user.routes")
 const teamCategoryRoutes = require("./routes/teamcategory.routes")
 const sportCategoryRoutes = require("./routes/sportcategory.routes")
@@ -20,6 +19,7 @@ const ottRoutes = require("./routes/ott.routes")
 const telecastRoutes = require("./routes/telecast.routes")
 const sportRoutes = require("./routes/sport.routes")
 const playerRoutes = require("./routes/player.routes")
+const teamRouters = require("./routes/team.routes")
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -34,7 +34,6 @@ app.use(express.json());
 
 // Routes
 app.use("/api/v1/auth", authRoutes);
-app.use("/api/v1/test", testRoutes)
 app.use("/api/v1/user", userRoutes)
 app.use("/api/v1/teamcategory", teamCategoryRoutes);
 app.use("/api/v1/sportcategory", sportCategoryRoutes);
@@ -45,6 +44,7 @@ app.use("/api/v1/ott", ottRoutes);
 app.use("/api/v1/telecast", telecastRoutes);
 app.use("/api/v1/sport", sportRoutes);
 app.use("/api/v1/player", playerRoutes);
+app.use("/api/v1/team",teamRouters)
 
 // Health Check Route
 app.get("/api/v1/health", (req, res) => {
