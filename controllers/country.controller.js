@@ -40,7 +40,12 @@ const createCountry = async (req, res) => {
 const getAllCountries = async (req, res) => {
   try {
     const countries = await Country.find().sort({ name: 1 });
-    return responseHandler(res, 200, "Countries fetched successfully.", countries);
+    const total = countries.length;
+
+    return responseHandler(res, 200, "Countries fetched successfully.", {
+      total,
+      countries
+    });
   } catch (error) {
     return errorHandler(res, 500, "Internal Server Error.");
   }
@@ -103,9 +108,7 @@ const deleteCountry = async (req, res) => {
       return errorHandler(res, 404, "Country not found.");
     }
 
-    return responseHandler(res, 200, "Country deleted successfully.", {
-      deletedCountry
-    });
+    return responseHandler(res, 200, "Country deleted successfully.", deletedCountry);
   } catch (error) {
     return errorHandler(res, 500, "Internal Server Error.");
   }

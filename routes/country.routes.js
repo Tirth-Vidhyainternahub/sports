@@ -12,8 +12,8 @@ const {validateToken,validateAdmin} = require("../middleware/auth.middleware");
 
 // Routes
 router.post("/", validateToken,validateAdmin,upload.single("flag"), createCountry); // Upload flag image
-router.get("/", getAllCountries);
-router.get("/:id", getCountryById);
+router.get("/", validateToken,getAllCountries);
+router.get("/:id", validateToken,getCountryById);
 router.patch("/:id", validateToken,validateAdmin,upload.single("flag"), updateCountry); // Allow flag image update
 router.delete("/:id", validateToken,validateAdmin,deleteCountry);
 
