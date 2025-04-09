@@ -2,3 +2,4 @@ node_modules
 .env
 myapp-db9bb-firebase-adminsdk-fbsvc-f8912c74b5.json
 .vs
+.DS_Store
