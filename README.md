@@ -40,4 +40,4 @@ npm start
 
 ## API Documentation
 For full API details, visit:
-[Postman Documentation](https://documenter.getpostman.com/view/27080842/2sAYkDML7i)
+[Postman Documentation](https://documenter.getpostman.com/view/27080842/2sB2cVe1oX)
