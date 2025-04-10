@@ -1,4 +1,5 @@
 const XLSX = require("xlsx");
+const Quiz = require("../models/quiz.model");
 const Venue = require("../models/venue.model.js");
 const City = require("../models/city.model.js");
 const Country = require("../models/country.model.js");
@@ -77,4 +78,75 @@ const bulkUploadVenues = async (req, res) => {
   }
 };
 
-module.exports = { bulkUploadVenues };
+
+const bulkUploadQuiz = async (req, res) => {
+  try {
+    if (!req.file) {
+      return errorHandler(res, 400, "No file uploaded");
+    }
+
+    const workbook = XLSX.read(req.file.buffer, { type: "buffer" });
+    const sheetName = workbook.SheetNames[0];
+    const worksheet = workbook.Sheets[sheetName];
+    const excelData = XLSX.utils.sheet_to_json(worksheet);
+
+    if (!excelData.length) {
+      return errorHandler(res, 400, "Excel file is empty");
+    }
+
+    const successEntries = [];
+    const failedEntries = [];
+
+    for (const row of excelData) {
+      // Normalize and trim field values from Excel sheet
+      const question = row["Question "]?.toString().trim();
+      const option1 = row["Option 1"]?.toString().trim();
+      const option2 = row["Option 2"]?.toString().trim();
+      const option3 = row["Option 3"]?.toString().trim();
+      const option4 = row["Option 4"]?.toString().trim();
+      const correctAnswer = row["Answer"]?.toString().trim();
+      const points = Number(row["Points"]) || 1;
+
+      if (!question || !option1 || !option2 || !option3 || !option4 || !correctAnswer) {
+        failedEntries.push({ row, reason: "Missing required fields" });
+        continue;
+      }
+
+      // Check if quiz with the same question already exists
+      const existingQuiz = await Quiz.findOne({ question });
+      if (existingQuiz) {
+        failedEntries.push({ row, reason: "Quiz with this question already exists" });
+        continue;
+      }
+
+      const options = [option1, option2, option3, option4];
+
+      if (!options.includes(correctAnswer)) {
+        failedEntries.push({ row, reason: "Correct answer does not match any provided option" });
+        continue;
+      }
+
+      const newQuiz = new Quiz({
+        question,
+        options,
+        correctAnswer,
+        points,
+      });
+
+      await newQuiz.save();
+      successEntries.push(newQuiz);
+    }
+
+    return responseHandler(res, 200, "Quiz bulk upload completed", {
+      total: excelData.length,
+      successCount: successEntries.length,
+      failedCount: failedEntries.length,
+      failedEntries,
+    });
+  } catch (error) {
+    console.error("Quiz Bulk Upload Error:", error);
+    return errorHandler(res, 500, "Something went wrong during bulk quiz upload", error.message);
+  }
+};
+
+module.exports = { bulkUploadVenues,bulkUploadQuiz };
