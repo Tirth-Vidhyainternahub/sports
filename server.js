@@ -24,6 +24,8 @@ const tournamentCategoryRouters = require("./routes/tournamentCategory.routes")
 const bulkuploadRoutes = require("./routes/bulkupload.route")
 const tournamentRoutes = require("./routes/tournament.routes")
 const userPreferenceRoutes = require("./routes/userPreference.routes")
+const quizRoutes = require("./routes/quiz.routes")
+
 const app = express();
 const PORT = process.env.PORT || 5000;
 
@@ -52,6 +54,7 @@ app.use("/api/v1/tournamentCategory",tournamentCategoryRouters)
 app.use("/api/v1/bulkupload", bulkuploadRoutes)
 app.use("/api/v1/tournament", tournamentRoutes)
 app.use("/api/v1/userPreference", userPreferenceRoutes)
+app.use("/api/v1/quiz", quizRoutes)
 
 // Health Check Route
 app.get("/api/v1/health", (req, res) => {
