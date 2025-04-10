@@ -4,8 +4,6 @@ const {
   createQuiz,
   getAllQuizzes,
   getQuizById,
-  getQuizzesByTournament,
-  fetchQuizForUser,
   submitAnswer,
   getLeaderboard,
   getMyScore,
@@ -21,15 +19,9 @@ router.post("/", validateToken, validateAdmin, createQuiz);
 // Get all quizzes
 router.get("/", validateToken, validateAdmin, getAllQuizzes);
 
-// Quiz feed for users
-router.get("/user-feed", validateToken, fetchQuizForUser);
-
 // Leaderboard & Personal Score
 router.get("/leaderboard", validateToken, getLeaderboard);
 router.get("/my-score", validateToken, getMyScore);
-
-// Quizzes by Tournament
-router.get("/tournament/:tournamentId", validateToken, getQuizzesByTournament);
 
 // Submit answer
 router.post("/submit", validateToken, submitAnswer);

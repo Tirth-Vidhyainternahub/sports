@@ -6,7 +6,7 @@ const scoreSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
-      unique: true, // this is correct
+      unique: true,
     },
     totalScore: {
       type: Number,
@@ -17,13 +17,15 @@ const scoreSchema = new mongoose.Schema(
         quiz: {
           type: mongoose.Schema.Types.ObjectId,
           ref: "Quiz",
+          required: true,
         },
         selectedAnswer: {
-          type: Number,
-          enum: [0, 1, 2, 3],
+          type: String,
+          required: true,
         },
         isCorrect: {
           type: Boolean,
+          required: true,
         },
         submittedAt: {
           type: Date,
@@ -32,9 +34,7 @@ const scoreSchema = new mongoose.Schema(
       },
     ],
   },
-  {
-    timestamps: true,
-  }
+  { timestamps: true }
 );
 
 module.exports = mongoose.model("Score", scoreSchema);
