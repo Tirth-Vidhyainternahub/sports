@@ -48,7 +48,7 @@ const createPlayer = async (req, res) => {
                 populate: {
                     path: 'category',
                     model: 'SportCategory',
-                },
+                }, 
             })
             .populate('country');
 

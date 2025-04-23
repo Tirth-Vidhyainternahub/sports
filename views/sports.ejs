@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="zxx">
+  <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+
+  <head>
+    <title>Score Tab</title>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <meta name="description" content="" />
+    <meta name="keywords" content="" />
+    <meta name="author" content="" />
+    <meta name="MobileOptimized" content="320" />
+    <!--Start Style -->
+    <link rel="stylesheet" type="text/css" href="/css/fonts.css" />
+    <link rel="stylesheet" type="text/css" href="/css/datatables.css" />
+    <link rel="stylesheet" type="text/css" href="/css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="/css/font-awesome.min.css" />
+    <link rel="stylesheet" type="text/css" href="/css/icofont.min.css" />
+    <link rel="stylesheet" href="/css/swiper.min.css" />
+    <!--Page Specific -->
+    <link rel="stylesheet" type="text/css" href="/css/nice-select.css" />
+    <!--Custom Style -->
+    <link rel="stylesheet" type="text/css" href="/css/style.css" />
+    <link rel="stylesheet" id="theme-change" type="text/css" href="#" />
+    <!-- Favicon Link -->
+    <link rel="shortcut icon" type="image/png" href="/images/favicon.png" />
+
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <script src="/js/api.js"></script>
+  </head>
+
+  <body>
+    <div class="loader">
+      <div class="spinner">
+        <img src="/images/loader.gif" alt="" />
+      </div>
+    </div>
+    <!-- Main Body -->
+    <div class="page-wrapper">
+      <!-- Header Start -->
+      <header class="header-wrapper main-header">
+        <div class="header-inner-wrapper">
+          <div class="header-right">
+            <div class="header-left">
+              <div class="header-links">
+                <a href="/" class="admin-logo">
+                  <img src="/logo.svg" alt="" class="sp_logo w-100" />
+                  <img src="/logo.svg" alt="" class="sp_mini_logo w-100" />
+                </a>
+              </div>
+            </div>
+            <div class="header-controls">
+              <div class="user-info-wrapper header-links">
+                <a href="javascript:void(0);" class="user-info">
+                  <img src="/images/user.jpg" alt="" class="user-img" />
+                  <div class="blink-animation">
+                    <span class="blink-circle"></span>
+                    <span class="main-circle"></span>
+                  </div>
+                </a>
+                <div class="user-info-box">
+                  <div class="drop-down-header">
+                    <h4><%= user.name %></h4>
+                    <p><%= user.role %></p>
+                  </div>
+                  <ul>
+                    <li>
+                      <a href="/profile">
+                        <i class="far fa-edit"></i> Edit Profile
+                      </a>
+                    </li>
+                    <li>
+                      <a href="/settings">
+                        <i class="fas fa-cog"></i> Settings
+                      </a>
+                    </li>
+                    <li>
+                      <a href="/logout">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </header>
+      <!-- Sidebar Start -->
+      <!-- Container Start -->
+      <div class="page-wrapper">
+        <div class="main-content">
+          <div class="page-title-wrapper">
+            <div class="page-title-box splash-title-box-use">
+              <ul>
+                <li>
+                  <div class="add-group">
+                    <a class="splash-btn btn btn-secondary" href="/"
+                      >Go to Dashboard</a
+                    >
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="splash-breadcrumb">
+              <ul>
+                <li>
+                  <div class="add-group">
+                    <button
+                      class="splash-btn"
+                      data-bs-toggle="modal"
+                      data-bs-target="#exampleModal"
+                    >
+                      Add New
+                    </button>
+
+                    <!-- Modal -->
+                    <div
+                      class="modal fade"
+                      id="exampleModal"
+                      tabindex="-1"
+                      aria-labelledby="exampleModalLabel"
+                      aria-hidden="true"
+                    >
+                      <div class="modal-dialog">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">
+                              Add New Sport
+                            </h5>
+                            <button
+                              type="button"
+                              class="btn-close"
+                              data-bs-dismiss="modal"
+                              aria-label="Close"
+                            ></button>
+                          </div>
+                          <div class="card-body">
+                            <form
+                              id="sportForm"
+                              class="separate-form"
+                              method="POST"
+                              action="/add-sport"
+                              enctype="multipart/form-data"
+                            >
+                              <input
+                                type="hidden"
+                                id="sport-id"
+                                name="sportId"
+                              />
+                              <!-- For editing -->
+                              <div class="form-group">
+                                <label for="sport-name">Sport Name</label>
+                                <input
+                                  type="text"
+                                  id="sport-name"
+                                  name="name"
+                                  class="form-control"
+                                  required
+                                />
+                              </div>
+                              <div class="form-group">
+                                <label for="category">Sport Category</label>
+                                <select
+                                  id="category"
+                                  name="category"
+                                  class="form-control"
+                                  required
+                                >
+                                  <% categories.forEach(category => { %>
+                                  <option value="<%= category.id %>">
+                                    <%= category.name %>
+                                  </option>
+                                  <% }); %>
+                                </select>
+                              </div>
+                              <div class="form-group">
+                                <label for="team-image">Logo</label>
+                                <input
+                                  type="file"
+                                  id="team-image"
+                                  name="logo"
+                                  class="form-control"
+                                />
+                              </div>
+                              <div class="form-group">
+                                <input
+                                  class="btn btn-success"
+                                  type="submit"
+                                  value="Submit"
+                                />
+                              </div>
+                            </form>
+                          </div>
+                          
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Products view Start -->
+          <div id="overlay" class="overlay" onclick="closeForm()"></div>
+
+          <div class="row">
+            <!-- Styled Table Card-->
+            <div
+              class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 py-2 mt-2 pb-2"
+            >
+              <div class="card table-card">
+                <div class="card-header pb-0">
+                  <a href="/custom-notification-form">
+                    <h4>Sport</h4>
+                  </a>
+                </div>
+                <div class="card-body pb-4">
+                  <div class="table-responsive">
+                    <table id="example" class="table table-styled">
+                      <thead>
+                        <tr>
+                          <th>Sl.No</th>
+                          <th>Sport</th>
+                          <th>Sport Logo</th>
+                          <th>Sport Category</th>
+                          <th>Action</th>
+                        </tr>
+                      </thead>
+                      <tbody id="table-body">
+                        <% sports.forEach((sport, index) => { %>
+                        <tr>
+                          <td><%= index + 1 %></td>
+                          <td><%= sport.name %></td>
+                          <td>
+                            <img
+                              src="<%= sport.logo %>"
+                              alt="Sport Logo"
+                              width="40"
+                            />
+                          </td>
+                          <td><%= sport.category %></td>
+                          <td>
+                            <a
+                              href="/edit/<%= sport.id %>"
+                              class="btn btn-success"
+                              >Edit</a
+                            >
+                            <a
+                              href="/delete/<%= sport.id %>"
+                              class="btn btn-primary"
+                              >Delete</a
+                            >
+                          </td>
+                        </tr>
+                        <% }); %>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="splash-footer-btm">
+            <p>Copyright 2025 © Score Tab All Rights Reserved.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="popup-form" id="popupForm">
+      <button class="close-btn" onclick="closeForm()">X</button>
+      <h4 id="formTitle">Add New Sport</h4>
+      <div class="card-body">
+        <form
+          id="sportForm"
+          class="separate-form"
+          method="POST"
+          action="/add-sport"
+          enctype="multipart/form-data"
+        >
+          <input type="hidden" id="sport-id" name="sportId" />
+          <!-- For editing -->
+          <div class="form-group">
+            <label for="sport-name">Sport Name</label>
+            <input
+              type="text"
+              id="sport-name"
+              name="name"
+              class="form-control"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="category">Sport Category</label>
+            <select id="category" name="category" class="form-control" required>
+              <% categories.forEach(category => { %>
+              <option value="<%= category.id %>"><%= category.name %></option>
+              <% }); %>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="team-image">Logo</label>
+            <input
+              type="file"
+              id="team-image"
+              name="logo"
+              class="form-control"
+            />
+          </div>
+          <div class="form-group">
+            <input class="btn btn-success" type="submit" value="Submit" />
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Script Start -->
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/popper.min.js"></script>
+    <script src="/js/datatables.min.js"></script>
+    <script src="/js/dataTables.responsive.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <script src="/js/swiper.min.js"></script>
+    <!-- Page Specific -->
+    <script src="/js/nice-select.min.js"></script>
+    <!-- Custom Script -->
+    <script src="/js/custom.js"></script>
+    <script>
+      $(document).ready(function () {
+        $("#example").DataTable();
+      });
+    </script>
+    <script>
+      const sportForm = document.getElementById("sportForm");
+      const sportNameInput = document.getElementById("sport-name");
+      const categorySelect = document.getElementById("category");
+      const logoInput = document.getElementById("team-image");
+      const sportIdInput = document.getElementById("sport-id");
+      const tableBody = document.getElementById("table-body");
+
+      let editingSportId = null;
+
+      function openForm() {
+        document.getElementById("popupForm").style.display = "block";
+        document.getElementById("overlay").style.display = "block";
+      }
+
+      function closeForm() {
+        document.getElementById("popupForm").style.display = "none";
+        document.getElementById("overlay").style.display = "none";
+      }
+
+      // Load Categories
+      async function loadCategories() {
+        const res = await getJSON("/sportcategory");
+        const categories = res?.data?.categories || [];
+        categorySelect.innerHTML = '<option value="">Select Category</option>';
+        categories.forEach((cat) => {
+          const option = document.createElement("option");
+          option.value = cat._id;
+          option.textContent = cat.name;
+          categorySelect.appendChild(option);
+        });
+      }
+
+      // Load Sports
+      async function loadSports() {
+        const res = await getJSON("/sport");
+        const sports = res?.data?.data || [];
+        tableBody.innerHTML = "";
+
+        sports.forEach((sport, index) => {
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+              <td>${index + 1}</td>
+              <td>${sport.name}</td>
+              <td><img src="${sport.logo}" width="40"/></td>
+              <td>${sport.category?.name || "-"}</td>
+              <td>
+                <a class="btn btn-success edit-btn" data-id="${
+                  sport._id
+                }">Edit</a>
+                <a class="btn btn-primary delete-btn" data-id="${
+                  sport._id
+                }">Delete</a>
+              </td>
+            `;
+          tableBody.appendChild(tr);
+        });
+
+        document.querySelectorAll(".edit-btn").forEach((btn) => {
+          btn.addEventListener("click", async () => {
+            const id = btn.dataset.id;
+            const sport = await getJSON(`/sport/${id}`);
+            const data = sport?.data || {};
+            editingSportId = data._id;
+            sportNameInput.value = data.name;
+            categorySelect.value = data.category?._id || "";
+            sportIdInput.value = data._id;
+            logoInput.value = "";
+            openForm();
+          });
+        });
+
+        document.querySelectorAll(".delete-btn").forEach((btn) => {
+          btn.addEventListener("click", async () => {
+            const id = btn.dataset.id;
+            if (confirm("Delete this sport?")) {
+              await deleteJSON(`/sport/${id}`);
+              loadSports();
+            }
+          });
+        });
+      }
+
+      // Submit Form
+      sportForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        const formData = new FormData();
+        formData.append("name", sportNameInput.value);
+        formData.append("category", categorySelect.value);
+        if (logoInput.files[0]) {
+          formData.append("logo", logoInput.files[0]);
+        }
+
+        const sportId = sportIdInput.value;
+        const url = sportId
+          ? `https://sports-ipix.onrender.com/api/v1/sport/${sportId}`
+          : `https://sports-ipix.onrender.com/api/v1/sport`;
+        const method = sportId ? "PATCH" : "POST";
+
+        const res = await fetch(url, {
+          method,
+          headers: {
+            Authorization: localStorage.getItem("token") || "",
+          },
+          body: formData,
+        });
+
+        if (res.ok) {
+          alert("Sport saved!");
+          sportForm.reset();
+          sportIdInput.value = "";
+          closeForm();
+          loadSports();
+        } else {
+          const err = await res.json();
+          alert("Error: " + err.message);
+        }
+      });
+
+      // Initial load
+      loadCategories();
+      loadSports();
+      function parseJWT(token) {
+        try {
+          const payload = token.split(".")[1];
+          const padded = payload.padEnd(
+            payload.length + ((4 - (payload.length % 4)) % 4),
+            "="
+          );
+          const base64 = padded.replace(/-/g, "+").replace(/_/g, "/");
+          const decodedPayload = atob(base64);
+          return JSON.parse(decodedPayload);
+        } catch (error) {
+          console.error("Failed to decode JWT:", error);
+          return null;
+        }
+      }
+
+      const bearerToken = localStorage.getItem("token")
+        ? localStorage.getItem("token")
+        : "hello world";
+      if (bearerToken && bearerToken.startsWith("Bearer ")) {
+        const jwt = bearerToken.split(" ")[1];
+        const user = parseJWT(jwt);
+        // ✅ Check for token expiration
+        const currentTime = Math.floor(Date.now() / 1000); // in seconds
+
+        if (user && (!user.exp || currentTime < user.exp)) {
+          // Update name and role
+          const nameElement = document.querySelector(".drop-down-header h4");
+          const roleElement = document.querySelector(".drop-down-header p");
+
+          if (nameElement) nameElement.innerText = user.name || "User";
+          if (roleElement) roleElement.innerText = user.role || "Role";
+
+          // ✅ Update existing profile image
+          const profileImg = document.querySelector(".user-img");
+          if (user.profilePic && profileImg) {
+            profileImg.src = user.profilePic;
+          }
+        } else {
+          alert("Token expired or invalid. Redirecting to login...");
+          window.location.href = "/login";
+        }
+      } else {
+        alert("No token found. Redirecting to login...");
+        window.location.href = "/login";
+      }
+    </script>
+  </body>
+</html>

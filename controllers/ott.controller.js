@@ -13,6 +13,7 @@ const createOTT = async (req, res) => {
     if (!name || !req.file || !country) {
       return errorHandler(res, 400, 'Name, logo and country are required.');
     }
+    
 
     if (!mongoose.Types.ObjectId.isValid(country)) {
       return errorHandler(res, 400, 'Invalid country ID.');
@@ -49,6 +50,7 @@ const createOTT = async (req, res) => {
 
     return responseHandler(res, 201, 'OTT created successfully.', populatedOTT);
   } catch (error) {
+    console.log(error,res)
     return errorHandler(res, 500, 'Internal Server Error.', error);
   }
 };

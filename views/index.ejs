@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+
+<html lang="zxx">
+  <head>
+    <title><%= title %></title>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <meta name="description" content="<%= description %>" />
+    <meta name="keywords" content="<%= keywords %>" />
+    <meta name="author" content="<%= author %>" />
+    <meta name="MobileOptimized" content="320" />
+    <!--Start Style -->
+    <link rel="stylesheet" type="text/css" href="/css/fonts.css" />
+    <link rel="stylesheet" type="text/css" href="/css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="/css/font-awesome.min.css" />
+    <link rel="stylesheet" type="text/css" href="/css/icofont.min.css" />
+    <link rel="stylesheet" type="text/css" href="/css/style.css" />
+    <link rel="stylesheet" id="theme-change" type="text/css" href="#" />
+    <!-- Favicon Link -->
+    <link rel="shortcut icon" type="image/png" href="/images/favicon.png" />
+    <script src="/js/api.js"></script>
+  </head>
+
+  <body>
+    <div class="loader">
+      <div class="spinner">
+        <img src="/images/loader.gif" alt="" />
+      </div>
+    </div>
+    <!-- Main Body -->
+    <div class="page-wrapper">
+      <!-- Header Start -->
+      <header class="header-wrapper main-header">
+        <div class="header-inner-wrapper">
+          <div class="header-right">
+            <div class="header-left">
+              <div class="header-links">
+                <a href="index.html" class="mx-2">
+                  <img src="/logo.svg" alt="" class="sp_logo w-100" />
+                  <img src="/logo.svg" alt="" class="sp_mini_logo w-100" />
+                </a>
+              </div>
+            </div>
+            <div class="header-controls">
+              <div class="user-info-wrapper header-links">
+                <a href="javascript:void(0);" class="user-info">
+                  <img src="/images/user.jpg" alt="" class="user-img" />
+                  <div class="blink-animation">
+                    <span class="blink-circle"></span>
+                    <span class="main-circle"></span>
+                  </div>
+                </a>
+                <div class="user-info-box">
+                  <div class="drop-down-header">
+                    <h4><%= user.name || 'John Brown' %></h4>
+                    <p><%= user.role || 'UI | UX Designer' %></p>
+                  </div>
+                  <ul>
+                    <li>
+                      <a href="profile">
+                        <i class="far fa-edit"></i> Edit Profile
+                      </a>
+                    </li>
+                    <li>
+                      <a href="setting">
+                        <i class="fas fa-cog"></i> Settings
+                      </a>
+                    </li>
+                    <li>
+                      <a href="login">
+                        <i class="fas fa-sign-out-alt"></i> logout
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </header>
+      <!-- Sidebar Start -->
+
+      <!-- content start  -->
+      <div class="page-wrapper">
+        <div class="main-content">
+          <!-- Page Title Start -->
+          <div class="row">
+            <div class="colxl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+              <div class="page-title-wrapper">
+                <div class="page-title-box">
+                  <h4 class="page-title bold">Dashboard</h4>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <% cards.forEach(card => { %>
+            <div class="col-xl-3 col-lg-4 col-md-6">
+              <a href="<%= card.link %>">
+                <div class="card splash-info-card">
+                  <div class="card-body dd-flex align-items-center">
+                    <div class="icon-info"><%- card.icon %></div>
+                    <div class="icon-info-text px-3">
+                      <h5 class="splash-title"><%= card.title %></h5>
+                      <h4 class="splash-card-title" id="<%= card.id %>">
+                        <%= card.count %>
+                      </h4>
+                    </div>
+                  </div>
+                </div>
+              </a>
+            </div>
+            <% }); %>
+          </div>
+        </div>
+      </div>
+
+      <!-- content start end  -->
+    </div>
+
+    <!-- Script Start -->
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/popper.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <script src="/js/swiper.min.js"></script>
+    <script src="/js/apexchart/apexcharts.min.js"></script>
+    <script src="/js/apexchart/control-chart-apexcharts.js"></script>
+    <!-- Page Specific -->
+    <script src="/js/nice-select.min.js"></script>
+    <!-- Custom Script -->
+    <script src="/js/custom.js"></script>
+    <script>
+              const city_number = document.getElementById("city_number");
+              const country_number = document.getElementById("country_number");
+              const venue_number = document.getElementById("venue_number");
+              const sport_number = document.getElementById("sport_number");
+              const ott_number = document.getElementById("ott_number");
+              const telecast_number = document.getElementById("telecast_number");
+              const player_number = document.getElementById("player_number");
+                const team_number = document.getElementById("team_number");
+                const tournament_number = document.getElementById("tournament_number");
+              function parseJWT(token) {
+                  try {
+                      const payload = token.split('.')[1];
+                      const padded = payload.padEnd(payload.length + (4 - payload.length % 4) % 4, '=');
+                      const base64 = padded.replace(/-/g, '+').replace(/_/g, '/');
+                      const decodedPayload = atob(base64);
+                      return JSON.parse(decodedPayload);
+                  } catch (error) {
+                      console.error("Failed to decode JWT:", error);
+                      return null;
+                  }
+              }
+
+              const bearerToken = localStorage.getItem("token") ? localStorage.getItem("token") : "hello world";
+              console.log(bearerToken)
+              if (bearerToken && bearerToken.startsWith("Bearer ")) {
+                  const jwt = bearerToken.split(" ")[1];
+                  const user = parseJWT(jwt);
+                  // ✅ Check for token expiration
+                  const currentTime = Math.floor(Date.now() / 1000); // in seconds
+
+                  if (user && (!user.exp || currentTime < user.exp)) {
+                      // Update name and role
+                      const nameElement = document.querySelector(".drop-down-header h4");
+                      const roleElement = document.querySelector(".drop-down-header p");
+
+                      if (nameElement) nameElement.innerText = user.name || "User";
+                      if (roleElement) roleElement.innerText = user.role || "Role";
+
+                      // ✅ Update existing profile image
+                      const profileImg = document.querySelector(".user-img");
+                      if (user.profilePic && profileImg) {
+                          profileImg.src = user.profilePic;
+                      }
+                  } else {
+                      alert("Token expired or invalid. Redirecting to login...");
+                      window.location.href = "/login";
+                  }
+              } else {
+                  alert("No token found. Redirecting to login...");
+                  window.location.href = "/login";
+              }
+
+              async function fetchData() {
+                  const [cities, countries, venues, sports, ott, telecast, player,teams,tournament] = await Promise.all([
+                      getJSON("/city"),
+                      getJSON("/country"),
+                      getJSON("/venue"),
+                      getJSON("/sport"),
+                      getJSON("/ott"),
+                      getJSON("/telecast"),
+                      getJSON("/player"),
+                        getJSON("/team"),
+                      getJSON("/tournamentCategory")
+                  ]);
+                  city_number.innerText = cities.data.total;
+                  country_number.innerText = countries.data.total;
+                  venue_number.innerText = venues.data.total;
+                  sport_number.innerText = sports.data.total;
+                  ott_number.innerText = ott.data.total;
+                  telecast_number.innerText = telecast.data.total;
+                  player_number.innerText = player.data.totalPlayers;
+                  team_number.innerText = teams.data.total;
+                  tournament_number.innerText = tournament.data.total;
+
+              }
+              fetchData();
+    </script>
+  </body>
+</html>
