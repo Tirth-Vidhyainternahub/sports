@@ -8,9 +8,9 @@ const responseHandler = require('../utils/response');
 // ✅ Create a new tournament
 const createTournament = async (req, res) => {
     try {
-        const { name, Startdate, Enddate, tournamentCategory, sports } = req.body;
+        const { name, startDate, endDate, tournamentCategory, sports } = req.body;
 
-        if (!name || !Startdate || !Enddate || !tournamentCategory || !sports) {
+        if (!name || !startDate || !endDate || !tournamentCategory || !sports) {
             return errorHandler(res, 400, 'All fields are required.');
         }
 
@@ -28,8 +28,8 @@ const createTournament = async (req, res) => {
 
         const newTournament = new Tournament({
             name,
-            Startdate,
-            Enddate,
+            startDate,
+            endDate,
             tournamentCategory,
             sports,
         });
@@ -84,13 +84,13 @@ const getTournamentById = async (req, res) => {
 const updateTournament = async (req, res) => {
     try {
         const { id } = req.params;
-        const { name, Startdate, Enddate, tournamentCategory, sports } = req.body;
+        const { name, startDate, endDate, tournamentCategory, sports } = req.body;
 
         const updateData = {};
 
         if (name) updateData.name = name;
-        if (Startdate) updateData.Startdate = Startdate;
-        if (Enddate) updateData.Enddate = Enddate;
+        if (startDate) updateData.startDate = startDate;
+        if (endDate) updateData.endDate = endDate;
 
         // If tournamentCategory is provided, validate it
         if (tournamentCategory) {

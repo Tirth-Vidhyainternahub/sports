@@ -123,9 +123,9 @@
                             </div>
                             <div class="card-body">
                                 <div class="table-responsive">
-                                    <table id="example" class="table table-styled" style="width:100%">
+                                    <table id="example" class="table table-styled dataTable no-footer" style="width:100%" role="grid">
                                         <thead>
-                                            <tr>
+                                            <tr role="row">
                                                 <th>Sl.No</th>
                                                 <th>Name</th>
                                                 <th>Sport</th>
@@ -181,17 +181,14 @@
                         <div class="form-group">
                             <label for="sport">Sport</label>
                             <select name="sport" class="form-control" id="sportSelect" required> 
-                                <option value="Cricket">Cricket</option>
-                                <option value="Hockey">Hockey</option>
-                                <option value="Football">Football</option>
-                                <option value="Badminton">Badminton</option>
-                                <option value="Formula 1">Formula 1</option>
-                                <option value="MotoGP">MotoGP</option>
+                                <option value="" disabled selected>Select Sport</option>
                             </select>
                         </div>
                         <div class="form-group">
                             <label for="category" class="col-form-label">Category*</label>
-                            <input class="form-control" type="text" name="category" placeholder="Enter Category*" required id="categorySelect">
+                            <select name="category" class="form-control" id="categorySelect" required> 
+                                <option value="" disabled selected>Select Category</option>
+                            </select>
                         </div>
                         <div class="form-group">
                             <label for="startDate" class="col-form-label">Season Start Date*</label>
@@ -275,27 +272,52 @@
         const form = document.querySelector(".separate-form");
         const modalTitle = document.getElementById("modalTitle");
         const submitBtn = document.getElementById("submitBtn");
+        const sportSelect = document.getElementById("sportSelect");
+        const categorySelect = document.getElementById("categorySelect");
     
         let editingId = null;
+
+        const loadOptions = async () => {
+          const [sportsRes, tournamentCatRes] = await Promise.all([
+            getJSON("/sport"),
+            getJSON("/tournamentCategory"),
+          ]);
+
+          // Populate Sports
+          sportsRes?.data?.data?.forEach((sport) => {
+            const opt = document.createElement("option");
+            opt.value = sport._id;
+            opt.textContent = sport.name;
+            sportSelect.appendChild(opt);
+          });
+          tournamentCatRes?.data?.categories?.forEach((category) => {
+            const opt = document.createElement("option");
+            opt.value = category._id;
+            opt.textContent = category.name;
+            categorySelect.appendChild(opt);
+          });
+
+          
+        };
+        loadOptions();
     
         // 🔄 Load and Display Tournaments
         async function loadTournaments() {
             try {
                 const data = await getJSON('/tournament');
                 tournamentTable.innerHTML = "";
-    
-                data.data.forEach((tournament, index) => {
+                data?.data?.tournaments?.forEach((tournament, index) => {
                     tournamentTable.innerHTML += `
                         <tr>
                             <td>${index + 1}</td>
                             <td>${tournament.name}</td>
-                            <td>${tournament.sport}</td>
-                            <td>${tournament.category}</td>
+                            <td>${tournament.sports.name}</td>
+                            <td>${tournament.tournamentCategory.name}</td>
                             <td>${tournament.startDate?.slice(0,10) || 'NA'}</td>
                             <td>${tournament.endDate?.slice(0,10) || 'NA'}</td>
                             <td>
-                                <button class="btn btn-success" onclick="editTournament('${tournament._id}')">Edit</button>
-                                <button class="btn btn-primary" onclick="deleteTournament('${tournament._id}')">Delete</button>
+                                <a class="btn btn-success" onclick="editTournament('${tournament._id}')">Edit</a>
+                                <a class="btn btn-primary" onclick="deleteTournament('${tournament._id}')">Delete</a>
                             </td>
                         </tr>
                     `;
@@ -311,15 +333,14 @@
     
             const payload = {
                 name: document.getElementById("name").value,
-                sport: document.getElementById("sportSelect").value,
-                category: document.getElementById("categorySelect").value,
+                sports: document.getElementById("sportSelect").value,
+                tournamentCategory: document.getElementById("categorySelect").value,
                 startDate: document.getElementById("startDate").value,
                 endDate: document.getElementById("endDate").value,
             };
-    
             try {
                 if (editingId) {
-                    await putJSON(`/tournament/${editingId}`, payload);
+                    await patchJSON(`/tournament/${editingId}`, payload);
                 } else {
                     await postJSON('/tournament', payload);
                 }
@@ -342,8 +363,8 @@
                 const t = data.data;
     
                 document.getElementById("name").value = t.name;
-                document.getElementById("sportSelect").value = t.sport;
-                document.getElementById("categorySelect").value = t.category;
+                document.getElementById("sportSelect").value = t.sports.name;
+                document.getElementById("categorySelect").value = t.tournamentCategory.name;
                 document.getElementById("startDate").value = t.startDate?.slice(0,10);
                 document.getElementById("endDate").value = t.endDate?.slice(0,10);
     
