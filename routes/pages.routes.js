@@ -11,6 +11,11 @@ const {
   telecastPage,
   playerPage,
   teamPage,
+  wheretowatchPage,
+  sportmatrixPage,
+  audiencePage,
+  adminPage,
+  tournamentPage
 } = require("../controllers/pages.controller");
 
 router.get("/", Homepage); // Render the homepage
@@ -23,5 +28,10 @@ router.get("/ott", ottPage);
 router.get("/telecast", telecastPage);
 router.get("/player", playerPage);
 router.get("/team", teamPage);
+router.get("/wheretowatch", wheretowatchPage);
+router.get("/sportmatrix", sportmatrixPage); // Render the sport matrix page
+router.get("/audience", audiencePage); // Render the audience page
+router.get("/admin", adminPage); // Render the admin page
+router.get("/tournament", tournamentPage); // Render the tournament page
 
 module.exports = router;

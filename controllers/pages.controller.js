@@ -11,6 +11,7 @@ const Tournament = require("../models/tournament.model");
 const responseHandler = require("../utils/response");
 const errorHandler = require("../utils/error");
 
+
 const name = "Jone Doe";
 const role = "Admin";
 
@@ -349,6 +350,84 @@ const teamPage = async (req, res) => {
   }
 };
 
+const wheretowatchPage = async (req, res) => {
+  try {
+    res.render("where_to_watch", {
+      title: "Where to Watch Management",
+      user: {
+        name: name, // or get from session/database
+        role: role, // or actual user role
+      },
+    });
+  } catch (err) {
+    errorHandler(res, 500, "Error while fetching data", error);
+  }
+}
+
+const sportmatrixPage = async (req, res) => {
+  try {
+    const countriesdata = await Country.find();
+    res.render("sport_matrix", {
+      title: "Sport Matrix Management",
+      user: {
+        name: name, // or get from session/database
+        role: role, // or actual user role
+      },
+      countries: countriesdata?.data?.countries || [],
+    });
+  } catch (err) {
+    errorHandler(res, 500, "Error while fetching data", err);
+  }
+}
+const audiencePage = async (req, res) => {
+  try {
+    const countriesdata = await Country.find();
+    res.render("audience", {
+      title: "Audience Management",
+      user: {
+        name: name, // or get from session/database
+        role: role, // or actual user role
+      },
+      countries: countriesdata?.data?.countries || [],
+    });
+  } catch (err) {
+    errorHandler(res, 500, "Error while fetching data", err);
+  }
+}
+
+const adminPage = async (req, res) => {
+  try {
+    res.render("admin_panel", {
+      title: "Admin Management",
+      user: {
+        name: name, // or get from session/database
+        role: role, // or actual user role
+      },
+    });
+  } catch (err) {
+    errorHandler(res, 500, "Error while fetching data", err);
+  }
+}
+
+const tournamentPage = async (req, res) => {
+  try {
+    const tournamentdata = await Tournament.find();
+    const sportdata = await Sport.find();
+    const countriesdata = await Country.find();
+    res.render("tournaments", {
+      title: "Tournament Management",
+      user: {
+        name: name, // or get from session/database
+        role: role, // or actual user role
+      },
+      tournaments: tournamentdata?.data?.tournaments || [],
+      sports: sportdata?.data?.sports || [],
+      countries: countriesdata?.data?.countries || [],
+    });
+  } catch (err) {
+    errorHandler(res, 500, "Error while fetching data", err);
+  }
+};
 module.exports = {
   Homepage,
   LoginPage,
@@ -360,4 +439,9 @@ module.exports = {
   telecastPage,
   playerPage,
   teamPage,
+  wheretowatchPage,
+  sportmatrixPage,
+  audiencePage,
+  adminPage,
+  tournamentPage,
 };
