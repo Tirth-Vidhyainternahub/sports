@@ -1,0 +1,91 @@
+<!-- Modal: Excel Import -->
+<div
+  class="modal fade"
+  id="exampleModalexcel"
+  tabindex="-1"
+  aria-labelledby="exampleModalLabelexcel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabelexcel">Excel Import</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <form class="separate-form" id="venueFormexcel">
+          <div class="form-group">
+            <label for="excelFile" class="col-form-label">Excel File</label>
+            <input
+              class="form-control"
+              type="file"
+              id="excelFile"
+              accept=".xlsx, .xls"
+            />
+          </div>
+
+          <div class="form-group mb-0">
+            <input
+              class="btn btn-success"
+              type="button"
+              value="Submit"
+              id="uploadBtn"
+            />
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Script for Excel Upload -->
+<!-- <script>
+  document.getElementById("uploadBtn").addEventListener("click", async () => {
+    const fileInput = document.getElementById("excelFile");
+    const file = fileInput.files[0];
+
+    if (!file) {
+      alert("Please select an Excel file.");
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = async (e) => {
+      const data = new Uint8Array(e.target.result);
+      const workbook = XLSX.read(data, { type: "array" });
+      const firstSheetName = workbook.SheetNames[0];
+      const worksheet = workbook.Sheets[firstSheetName];
+      const jsonData = XLSX.utils.sheet_to_json(worksheet);
+
+      for (const row of jsonData) {
+        console.log(row)
+        const venueData = {
+          name: row["Name"] || "",
+          geolocation: row["Geo Location"] || "",
+          lat: row["Lat"] || "",
+          long: row["Long"] || "",
+          city: cityMap.get(row["City"]) || "",
+    country: countryMap.get(row["Country"]) || "",
+        };
+
+        try {
+          await postJSON("/venue", venueData);
+        } catch (err) {
+          console.error("Error uploading venue:", err);
+        }
+      }
+
+      // Reload venue list after import
+      if (typeof loadVenues === "function") loadVenues();
+      alert("Excel data imported successfully.");
+      document.getElementById("exampleModalexcel").querySelector(".btn-close").click();
+    };
+
+    reader.readAsArrayBuffer(file);
+  });
+</script> -->

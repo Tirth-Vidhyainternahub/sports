@@ -1,0 +1,36 @@
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <form id="venueForm">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Add / Edit Venue</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <label for="name" class="col-form-label">Name*</label>
+            <input type="text" name="name" id="name" placeholder="Enter Name*" class="form-control mb-2" required />
+
+            <label for="geoLocation" class="col-form-label">Geo Location*</label>
+            <input type="text" name="geoLocation" id="geoLocation" placeholder="Enter Geo Location*" class="form-control mb-2" required />
+
+            <label for="lat" class="col-form-label">Latitude*</label>
+            <input type="text" name="lat" id="lat" placeholder="Enter Lat*" class="form-control mb-2" required />
+
+            <label for="long" class="col-form-label">Longitude*</label>
+            <input type="text" name="long" id="long" placeholder="Enter Long*" class="form-control mb-2" required />
+
+            <label for="city" class="col-form-label">City*</label>
+            <select name="city" id="city" class="form-control mb-2" required></select>
+
+            <label for="country" class="col-form-label">Country*</label>
+            <select name="country" id="country" class="form-control mb-2" required></select>
+            
+          </div>
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-primary">Save Venue</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  

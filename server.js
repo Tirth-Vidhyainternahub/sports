@@ -8,6 +8,7 @@ const responseHandler = require("./utils/response");
 const errorHandler = require("./utils/error");
 
 // Import Routes
+const page = require("./routes/pages.routes")
 const authRoutes = require("./routes/auth.routes");
 const userRoutes = require("./routes/user.routes")
 const teamCategoryRoutes = require("./routes/teamcategory.routes")
@@ -37,7 +38,15 @@ app.use(cors());
 app.use(morgan("dev"));
 app.use(express.json());
 
+//View Engine
+app.set("view engine", "ejs");
+
+// Serve static files from the "public" directory
+app.use(express.static('public'));
+
+
 // Routes
+app.use("/", page);
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/user", userRoutes)
 app.use("/api/v1/teamcategory", teamCategoryRoutes);

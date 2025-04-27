@@ -5,11 +5,11 @@ const tournamentSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    Startdate: {
+    startDate: {
         type: Date,
         required: true
     },
-    Enddate: {
+    endDate: {
         type: Date,
         required: true
     },

@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="zxx">
+<meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+<head>
+    <title>Score Tab</title>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+    <meta name="author" content="">
+    <meta name="MobileOptimized" content="320">
+    <!--Start Style -->
+    <link rel="stylesheet" type="text/css" href="/css/fonts.css">
+    <link rel="stylesheet" type="text/css" href="/css/datatables.css">
+    <link rel="stylesheet" type="text/css" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="/css/icofont.min.css">
+    <link rel="stylesheet" href="/css/swiper.min.css">
+    <!--Page Specific -->
+    <link rel="stylesheet" type="text/css" href="/css/nice-select.css">
+    <!--Custom Style -->
+    <link rel="stylesheet" type="text/css" href="/css/style.css">
+    <link rel="stylesheet" id="theme-change" type="text/css" href="#">
+    <!-- Favicon Link -->
+    <link rel="shortcut icon" type="image/png" href="/images/favicon.png">
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+</head>
+<body>
+    <div class="loader">
+        <div class="spinner">
+            <img src="/images/loader.gif" alt="" />
+        </div>
+    </div>
+    <!-- Main Body -->
+    <div class="page-wrapper">
+        <!-- Header Start -->
+        <header class="header-wrapper main-header">
+            <div class="header-inner-wrapper">
+                <div class="header-right">
+                    <div class="header-left">
+                        <div class="header-links">
+                            <a href="/" class="admin-logo">
+                                <img src="/logo.svg" alt="" class="sp_logo w-100 ">
+                                <img src="/logo.svg" alt="" class="sp_mini_logo w-100">
+                            </a>
+                        </div>
+                    </div>
+                    <div class="header-controls">
+                        <div class="user-info-wrapper header-links">
+                            <a href="javascript:void(0);" class="user-info">
+                                <img src="/images/user.jpg" alt="" class="user-img">
+                                <div class="blink-animation">
+                                    <span class="blink-circle"></span>
+                                    <span class="main-circle"></span>
+                                </div>
+                            </a>
+                            <div class="user-info-box">
+                                <div class="drop-down-header">
+                                    <h4>John Brown</h4>
+                                    <p>UI | UX Designer</p>
+                                </div>
+                                <ul>
+                                    <li>
+                                        <a href="/profile">
+                                            <i class="far fa-edit"></i> Edit Profile
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="/setting">
+                                            <i class="fas fa-cog"></i> Settings
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="/login">
+                                            <i class="fas fa-sign-out-alt"></i> logout
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Container Start -->
+        <div class="page-wrapper">
+            <div class="main-content">
+                <div class="page-title-wrapper">
+                    <div class="page-title-box splash-title-box-use">
+                        <ul>
+                            <li>
+                                <div class="add-group">
+                                    <a class="splash-btn btn btn-secondary" href="/">Go to Dashboard</a>
+                                </div>
+                            </li>
+                        </ul>                  
+                    </div>
+                    <div class="splash-breadcrumb">
+                        <ul>
+                            <li>
+                                <div class="add-group">
+                                   <button class="splash-btn" data-bs-toggle="modal" data-bs-target="#exampleModal">Add
+                                        New</button>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <!-- Products view Start -->
+                <div class="row">
+                    <!-- Styled Table Card-->
+                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                        <div class="card table-card">
+                            <div class="card-header pb-0">
+                                <a href="/custom-notification-form">
+                                    <h4>Where To Watch </h4>
+                                </a>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table id="example" class="table table-styled" style="width:100%">
+                                        <thead>
+                                            <tr>
+                                                <th>Sl.No</th>
+                                                <th>Sport</th>
+                                                <th>Tournament</th>
+                                                <th>Country</th>
+                                                <th>OTT</th>
+                                                <th>OTT Logo</th>
+                                                <th>Telecast</th>
+                                                <th>Telecast Logo</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <% if (typeof data !== 'undefined' && Array.isArray(data)) { %>
+                                                <% data.forEach((item, index) => { %>
+                                                <tr>
+                                                    <td><%= index + 1 %></td>
+                                                    <td><%= item.sport %></td>
+                                                    <td><%= item.tournament %></td>
+                                                    <td><%= item.country %></td>
+                                                    <td><%= item.ott %></td>
+                                                    <td><img src="<%= item.ottLogo %>" alt="OTT Logo"></td>
+                                                    <td><%= item.telecast %></td>
+                                                    <td><img src="<%= item.telecastLogo %>" alt="Telecast Logo"></td>
+                                                    <td>
+                                                        <a href="/edit/<%= item.id %>" class="btn btn-success">Edit</a>
+                                                        <a href="/delete/<%= item.id %>" class="btn btn-primary">Delete</a>
+                                                    </td>
+                                                </tr>
+                                                <% }) %>
+                                            <% } else { %>
+                                                <tr>
+                                                    <td colspan="9">No data available</td>
+                                                </tr>
+                                            <% } %>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="splash-footer-btm">
+                    <p>Copyright 2025 © Score Tab All Rights Reserved.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+   
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Add New Teams</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form class="separate-form" action="/add" method="POST">
+                        <div class="form-group">
+                            <label for="sport"> Sport</label>
+                            <select id="sport" name="sport" class="form-control">
+                                <option value="0">ALL</option>
+                                <option value="1">Cricket</option>
+                                <option value="2">Hockey</option>
+                                <option value="3">Football</option>
+                                <option value="9">Badminton</option>
+                                <option value="10">Formula 1</option>
+                                <option value="11">Formula E</option>
+                                <option value="12">MotoGP</option>
+                                <option value="13">Kabaddi</option>
+                                <option value="16">Multi Sport</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="tournament" class="col-form-label"> Tournament </label>
+                            <select id="tournament" name="tournament" class="form-control">
+                                <option value="0">ALL</option>
+                                <option value="1">Border - Gavaskar Trophy</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="country" class="col-form-label"> Country </label>
+                            <select id="country" name="country" class="form-control">
+                                <option value="0">ALL</option>
+                                <option value="1">India</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="ott" class="col-form-label"> OTT </label>
+                            <select id="ott" name="ott" class="form-control">
+                                <option value="0">ALL</option>
+                                <option value="1">JioHotstar</option>
+                                <option value="2">XYZ</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="telecast" class="col-form-label"> Telecast </label>
+                            <select id="telecast" name="telecast" class="form-control">
+                                <option value="0">ALL</option>
+                                <option value="1">Dordarsan</option>
+                                <option value="2">ABC</option>
+                            </select>
+                        </div>
+                        <div class="form-group mb-0">
+                            <input class="btn btn-success" type="submit" value="Submit">
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+  
+    <!-- Preview Setting -->
+    <!-- Script Start -->
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/popper.min.js"></script>
+    <script src="/js/datatables.min.js"></script>
+    <script src="/js/dataTables.responsive.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <script src="/js/swiper.min.js"></script>
+    <!-- Page Specific -->
+    <script src="/js/nice-select.min.js"></script>
+    <!-- Custom Script -->
+    <script src="/js/custom.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#example').DataTable();
+        });
+        function parseJWT(token) {
+        try {
+          const payload = token.split(".")[1];
+          const padded = payload.padEnd(
+            payload.length + ((4 - (payload.length % 4)) % 4),
+            "="
+          );
+          const base64 = padded.replace(/-/g, "+").replace(/_/g, "/");
+          const decodedPayload = atob(base64);
+          return JSON.parse(decodedPayload);
+        } catch (error) {
+          console.error("Failed to decode JWT:", error);
+          return null;
+        }
+      }
+
+      const bearerToken = localStorage.getItem("token")
+        ? localStorage.getItem("token")
+        : "hello world";
+      if (bearerToken && bearerToken.startsWith("Bearer ")) {
+        const jwt = bearerToken.split(" ")[1];
+        const user = parseJWT(jwt);
+        // ✅ Check for token expiration
+        const currentTime = Math.floor(Date.now() / 1000); // in seconds
+
+        if (user && (!user.exp || currentTime < user.exp)) {
+          // Update name and role
+          const nameElement = document.querySelector(".drop-down-header h4");
+          const roleElement = document.querySelector(".drop-down-header p");
+
+          if (nameElement) nameElement.innerText = user.name || "User";
+          if (roleElement) roleElement.innerText = user.role || "Role";
+
+          // ✅ Update existing profile image
+          const profileImg = document.querySelector(".user-img");
+          if (user.profilePic && profileImg) {
+            profileImg.src = user.profilePic;
+          }
+        } else {
+          alert("Token expired or invalid. Redirecting to login...");
+          window.location.href = "/login";
+        }
+      } else {
+        alert("No token found. Redirecting to login...");
+        window.location.href = "/login";
+      }
+    </script>
+</body>
+</html>

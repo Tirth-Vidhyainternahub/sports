@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="zxx">
+<head>
+    <title>Score Tab</title>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+    <meta name="author" content="">
+    <meta name="MobileOptimized" content="320">
+    <!--Start Style -->
+    <link rel="stylesheet" type="text/css" href="/css/fonts.css">
+    <link rel="stylesheet" type="text/css" href="/css/datatables.css">
+    <link rel="stylesheet" type="text/css" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="/css/icofont.min.css">
+    <link rel="stylesheet" href="/css/swiper.min.css">
+    <!--Page Specific -->
+    <link rel="stylesheet" type="text/css" href="/css/nice-select.css">
+    <!--Custom Style -->
+    <link rel="stylesheet" type="text/css" href="/css/style.css">
+    <link rel="stylesheet" id="theme-change" type="text/css" href="#">
+    <!-- Favicon Link -->
+    <link rel="shortcut icon" type="image/png" href="/images/favicon.png">
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <script src="/js/api.js"></script>
+</head>
+<body>
+    <div class="loader">
+        <div class="spinner">
+            <img src="/images/loader.gif" alt="" />
+        </div>
+    </div>
+    <!-- Main Body -->
+    <div class="page-wrapper">
+        <!-- Header Start -->
+        <header class="header-wrapper main-header">
+            <div class="header-inner-wrapper">
+                <div class="header-right">
+                    <div class="header-left">
+                        <div class="header-links">
+                            <a href="/" class="admin-logo">
+                                <img src="/logo.svg" alt="" class="sp_logo w-100 ">
+                                <img src="/logo.svg" alt="" class="sp_mini_logo w-100">
+                            </a>
+                        </div>
+                    </div>
+                    <div class="header-controls">
+                        <div class="user-info-wrapper header-links">
+                            <a href="javascript:void(0);" class="user-info">
+                                <img src="/images/user.jpg" alt="" class="user-img">
+                                <div class="blink-animation">
+                                    <span class="blink-circle"></span>
+                                    <span class="main-circle"></span>
+                                </div>
+                            </a>
+                            <div class="user-info-box">
+                                <div class="drop-down-header">
+                                    <h4>John Brown</h4>
+                                    <p>UI | UX Designer</p>
+                                </div>
+                                <ul>
+                                    <li>
+                                        <a href="/profile">
+                                            <i class="far fa-edit"></i> Edit Profile
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="/setting">
+                                            <i class="fas fa-cog"></i> Settings
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="/login">
+                                            <i class="fas fa-sign-out-alt"></i> Logout
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Container Start -->
+        <div class="page-wrapper">
+            <div class="main-content">
+                <div class="page-title-wrapper">
+                    <div class="page-title-box splash-title-box-use">
+                        <ul>
+                            <li>
+                                <div class="add-group">
+                                    <a class="splash-btn btn btn-secondary" href="/">Go to Dashboard</a>
+                                </div>
+                            </li>
+                        </ul>                  
+                    </div>
+                    <div class="splash-breadcrumb">
+                        <ul>
+                            <li>
+                                <div class="add-group">
+                                    <button class="splash-btn" data-bs-toggle="modal" data-bs-target="#exampleModalexcel">Excel Import</button>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="add-group">
+                                   <button class="splash-btn" data-bs-toggle="modal" data-bs-target="#exampleModal">Add New</button>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <!-- Products view Start -->
+                <div class="row">
+                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                        <div class="card table-card">
+                            <div class="card-header pb-0">
+                                <a href="/custom-notification-form">
+                                    <h4>Tournaments</h4>
+                                </a>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table id="example" class="table table-styled dataTable no-footer" style="width:100%" role="grid">
+                                        <thead>
+                                            <tr role="row">
+                                                <th>Sl.No</th>
+                                                <th>Name</th>
+                                                <th>Sport</th>
+                                                <th>Category</th>
+                                                <th>Season Start Date</th>
+                                                <th>End Date</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <% tournaments.forEach((tournament, index) => { %>
+                                                <tr>
+                                                    <td><%= index + 1 %></td>
+                                                    <td><%= tournament.name %></td>
+                                                    <td><%= tournament.sport %></td>
+                                                    <td><%= tournament.category %></td>
+                                                    <td><%= tournament.startDate || 'NA' %></td>
+                                                    <td><%= tournament.endDate || 'NA' %></td>
+                                                    <td>
+                                                        <a href="/edit/<%= tournament.id %>" class="btn btn-success">Edit</a>
+                                                        <a href="/delete/<%= tournament.id %>" class="btn btn-primary">Delete</a>
+                                                    </td>
+                                                </tr>
+                                            <% }) %>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="splash-footer-btm">
+                    <p>Copyright 2025 © Score Tab All Rights Reserved.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modals -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalTitle">Add Tournament</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form class="separate-form" action="/add-tournament" method="POST">
+                        <div class="form-group">
+                            <label for="name" class="col-form-label">Name*</label>
+                            <input class="form-control" type="text" name="name" placeholder="Enter Name*" id="name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="sport">Sport</label>
+                            <select name="sport" class="form-control" id="sportSelect" required> 
+                                <option value="" disabled selected>Select Sport</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="category" class="col-form-label">Category*</label>
+                            <select name="category" class="form-control" id="categorySelect" required> 
+                                <option value="" disabled selected>Select Category</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="startDate" class="col-form-label">Season Start Date*</label>
+                            <input class="form-control" type="date" name="startDate" required id="startDate">
+                        </div>
+                        <div class="form-group">
+                            <label for="endDate" class="col-form-label">Season End Date*</label>
+                            <input class="form-control" type="date" name="endDate" required     id="endDate">
+                        </div>
+                        <div class="form-group mb-0">
+                            <input class="btn btn-success" type="submit" value="Submit" id="submitBtn">
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/popper.min.js"></script>
+    <script src="/js/datatables.min.js"></script>
+    <script src="/js/dataTables.responsive.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <script src="/js/swiper.min.js"></script>
+    <script src="/js/nice-select.min.js"></script>
+    <script src="/js/custom.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#example').DataTable();
+        });
+        //Token Validation and User Info Update
+              // Function to parse JWT token and extract payload
+        function parseJWT(token) {
+                  try {
+                      const payload = token.split('.')[1];
+                      const padded = payload.padEnd(payload.length + (4 - payload.length % 4) % 4, '=');
+                      const base64 = padded.replace(/-/g, '+').replace(/_/g, '/');
+                      const decodedPayload = atob(base64);
+                      return JSON.parse(decodedPayload);
+                  } catch (error) {
+                      console.error("Failed to decode JWT:", error);
+                      return null;
+                  }
+              }
+
+              const bearerToken = localStorage.getItem("token") ? localStorage.getItem("token") : "hello world";
+              
+              if (bearerToken && bearerToken.startsWith("Bearer ")) {
+                  const jwt = bearerToken.split(" ")[1];
+                  const user = parseJWT(jwt);
+                  // ✅ Check for token expiration
+                  const currentTime = Math.floor(Date.now() / 1000); // in seconds
+
+                  if (user && (!user.exp || currentTime < user.exp)) {
+                      // Update name and role
+                      const nameElement = document.querySelector(".drop-down-header h4");
+                      const roleElement = document.querySelector(".drop-down-header p");
+
+                      if (nameElement) nameElement.innerText = user.name || "User";
+                      if (roleElement) roleElement.innerText = user.role || "Role";
+
+                      // ✅ Update existing profile image
+                      const profileImg = document.querySelector(".user-img");
+                      if (user.profilePic && profileImg) {
+                          profileImg.src = user.profilePic;
+                      }
+                  } else {
+                      alert("Token expired or invalid. Redirecting to login...");
+                      window.location.href = "/login";
+                  }
+              } else {
+                  alert("No token found. Redirecting to login...");
+                  window.location.href = "/login";
+              }
+
+        
+    </script>
+    <script>
+        const tournamentTable = document.querySelector("#example tbody");
+        const form = document.querySelector(".separate-form");
+        const modalTitle = document.getElementById("modalTitle");
+        const submitBtn = document.getElementById("submitBtn");
+        const sportSelect = document.getElementById("sportSelect");
+        const categorySelect = document.getElementById("categorySelect");
+    
+        let editingId = null;
+
+        const loadOptions = async () => {
+          const [sportsRes, tournamentCatRes] = await Promise.all([
+            getJSON("/sport"),
+            getJSON("/tournamentCategory"),
+          ]);
+
+          // Populate Sports
+          sportsRes?.data?.data?.forEach((sport) => {
+            const opt = document.createElement("option");
+            opt.value = sport._id;
+            opt.textContent = sport.name;
+            sportSelect.appendChild(opt);
+          });
+          tournamentCatRes?.data?.categories?.forEach((category) => {
+            const opt = document.createElement("option");
+            opt.value = category._id;
+            opt.textContent = category.name;
+            categorySelect.appendChild(opt);
+          });
+
+          
+        };
+        loadOptions();
+    
+        // 🔄 Load and Display Tournaments
+        async function loadTournaments() {
+            try {
+                const data = await getJSON('/tournament');
+                tournamentTable.innerHTML = "";
+                data?.data?.tournaments?.forEach((tournament, index) => {
+                    tournamentTable.innerHTML += `
+                        <tr>
+                            <td>${index + 1}</td>
+                            <td>${tournament.name}</td>
+                            <td>${tournament.sports.name}</td>
+                            <td>${tournament.tournamentCategory.name}</td>
+                            <td>${tournament.startDate?.slice(0,10) || 'NA'}</td>
+                            <td>${tournament.endDate?.slice(0,10) || 'NA'}</td>
+                            <td>
+                                <a class="btn btn-success" onclick="editTournament('${tournament._id}')">Edit</a>
+                                <a class="btn btn-primary" onclick="deleteTournament('${tournament._id}')">Delete</a>
+                            </td>
+                        </tr>
+                    `;
+                });
+            } catch (err) {
+                console.error("Failed to load tournaments:", err);
+            }
+        }
+    
+        // ➕/✏️ Handle Form Submission (Add/Edit)
+        form.addEventListener("submit", async (e) => {
+            e.preventDefault();
+    
+            const payload = {
+                name: document.getElementById("name").value,
+                sports: document.getElementById("sportSelect").value,
+                tournamentCategory: document.getElementById("categorySelect").value,
+                startDate: document.getElementById("startDate").value,
+                endDate: document.getElementById("endDate").value,
+            };
+            try {
+                if (editingId) {
+                    await patchJSON(`/tournament/${editingId}`, payload);
+                } else {
+                    await postJSON('/tournament', payload);
+                }
+    
+                $('#exampleModal').modal('hide');
+                form.reset();
+                editingId = null;
+                submitBtn.textContent = "Add Tournament";
+                modalTitle.textContent = "Add Tournament";
+                loadTournaments();
+            } catch (err) {
+                alert("Something went wrong.");
+            }
+        });
+    
+        // ✏️ Edit Tournament
+        async function editTournament(id) {
+            try {
+                const data = await getJSON(`/tournament/${id}`);
+                const t = data.data;
+    
+                document.getElementById("name").value = t.name;
+                document.getElementById("sportSelect").value = t.sports.name;
+                document.getElementById("categorySelect").value = t.tournamentCategory.name;
+                document.getElementById("startDate").value = t.startDate?.slice(0,10);
+                document.getElementById("endDate").value = t.endDate?.slice(0,10);
+    
+                editingId = id;
+                submitBtn.textContent = "Update Tournament";
+                modalTitle.textContent = "Edit Tournament";
+    
+                $('#exampleModal').modal('show');
+            } catch (err) {
+                alert("Failed to load tournament data.");
+            }
+        }
+    
+        // 🗑️ Delete Tournament
+        async function deleteTournament(id) {
+            if (!confirm("Are you sure you want to delete this tournament?")) return;
+            try {
+                await deleteJSON(`/tournament/${id}`);
+                loadTournaments();
+            } catch (err) {
+                alert("Failed to delete tournament.");
+            }
+        }
+    
+        // Reset form when modal closed
+        $('#exampleModal').on('hidden.bs.modal', () => {
+            form.reset();
+            editingId = null;
+            submitBtn.textContent = "Add Tournament";
+            modalTitle.textContent = "Add Tournament";
+        });
+    
+        // 🔁 Init
+        document.addEventListener("DOMContentLoaded", loadTournaments);
+    </script>
+    
+</body>
+</html>

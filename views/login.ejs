@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="zxx">
+  <head>
+    <title><%= title %></title>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <meta name="description" content="<%= description %>" />
+    <meta name="keywords" content="<%= keywords %>" />
+    <meta name="author" content="<%= author %>" />
+    <meta name="MobileOptimized" content="320" />
+
+    <link rel="stylesheet" href="/css/fonts.css" />
+    <link rel="stylesheet" href="/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/css/auth.css" />
+    <link rel="shortcut icon" type="image/png" href="/images/favicon.png" />
+
+    <script src="/js/api.js"></script>
+  </head>
+
+  <body>
+    <div class="splash-auth-wrapper">
+      <div class="splash-auth-box">
+        <div class="splash-auth-content">
+          <form>
+            <a href="/">
+              <img src="/logo.svg" alt="" class="w-50" />
+            </a>
+            <h2>Hello, Welcome to <span>Score Tab</span></h2>
+            <p>Fill the Details Below to Login to Your Account</p>
+            <div class="splash-auth-form">
+              <div class="splash-auth-feilds mb-30">
+                <input type="text" placeholder="Email Address" class="splash-input" />
+                <div class="splash-auth-icon">
+                  <!-- SVG Icon here -->
+                </div>
+              </div>
+              <div class="splash-auth-feilds">
+                <input type="password" placeholder="Password" class="splash-input" />
+                <div class="splash-auth-icon">
+                  <!-- SVG Icon here -->
+                </div>
+              </div>
+            </div>
+            <div class="splash-other-feilds">
+              <div class="splash-checkbox">
+                <label>
+                  <input type="checkbox" name="remember" class="splash-checkbox" />
+                  <span>Remember Me</span>
+                </label>
+              </div>
+              <a class="forgot-pws-btn" href="/forgot-pws">Forgot Password?</a>
+            </div>
+            <div class="splash-auth-btn">
+              <a href="javascript:void(0);" class="splash-btn splash-login-member w-100">Login</a>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const loginBtn = document.querySelector(".splash-login-member");
+      const emailInput = document.querySelector('input[type="text"]');
+      const passwordInput = document.querySelector('input[type="password"]');
+
+      loginBtn.addEventListener("click", async () => {
+        const email = emailInput.value.trim();
+        const password = passwordInput.value.trim();
+
+        if (email && password) {
+          try {
+            const response = await postJSON("/auth/login", { email, password });
+            console.log(response)
+
+            if (response.success) {
+              alert("Login successful!");
+              localStorage.setItem("token", `Bearer ${response.data.token}`);
+              window.location.href = "/";
+            } else {
+              alert(response.message || "Login failed. Please check your credentials.");
+            }
+          } catch (error) {
+            alert("An error occurred. Please try again later.");
+            console.error(error);
+          }
+        } else {
+          alert("Please fill in all fields.");
+        }
+      });
+    </script>
+  </body>
+</html>
