@@ -236,7 +236,7 @@
               }
 
               const bearerToken = localStorage.getItem("token") ? localStorage.getItem("token") : "hello world";
-              console.log(bearerToken)
+              
               if (bearerToken && bearerToken.startsWith("Bearer ")) {
                   const jwt = bearerToken.split(" ")[1];
                   const user = parseJWT(jwt);
